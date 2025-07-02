@@ -4,11 +4,15 @@ from flask import Flask, render_template, request, url_for, flash, redirect
 import sqlite3
 import os
 import threading
+from db_utils import create_tables
 
 DB_PATH = "news.db"
 
 app = Flask(__name__)
 app.secret_key = "super_secret_key"
+
+with app.app_context():
+    create_tables()
 
 def load_cached_news():
     conn = sqlite3.connect(DB_PATH)

@@ -3,6 +3,7 @@ from feeds import FEEDS
 from flask import Flask, render_template, request, url_for, flash, redirect
 import sqlite3
 import os
+import threading
 
 DB_PATH = "news.db"
 
@@ -43,15 +44,18 @@ def home():
         selected_region=region,
         selected_country=country,
         )
-
 @app.route("/refresh")
 def refresh():
-    try:
-        import fetch_and_cache_news
-        fetch_and_cache_news.fetch_and_cache()
-        flash("News successfully refreshed!", "success")
-    except Exception as e:
-        flash(f"Error refreshing news: {str(e)}", "danger")
+    def fetch_news():
+        try:
+            import fetch_and_cache_news
+            fetch_and_cache_news.fetch_and_cache()
+        except Exception as e:
+            print(f"Error in background fetch: {e}")
+
+    thread = threading.Thread(target=fetch_news)
+    thread.start()
+    flash("News refresh started in background!", "info")
     return redirect(url_for("home"))
 
 if __name__ == "__main__":

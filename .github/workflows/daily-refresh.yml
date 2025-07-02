@@ -1,0 +1,14 @@
+name: Daily News Refresh
+
+on:
+  schedule:
+    # Runs at 7:00 UTC daily — adjust as needed
+    - cron: '0 7 * * *'
+
+jobs:
+  refresh-news:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Refresh Endpoint
+        run: curl --fail -X GET https://world-news-app-qhk9.onrender.com/refresh
+

@@ -8,6 +8,7 @@ from db_utils import create_tables, DB_PATH, get_connection
 
 
 app = Flask(__name__)
+app.secret_key = "super-secret-key-please-change"
 create_tables()
 
 

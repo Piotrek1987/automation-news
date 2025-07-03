@@ -4,6 +4,7 @@ on:
   schedule:
     # Runs at 7:00 AM UTC every day
     - cron: '0 7 * * *'
+    workflow_dispatch: 
 
 jobs:
   refresh-news:

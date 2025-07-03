@@ -2,6 +2,7 @@ import feedparser
 import time
 from feeds import FEEDS, is_relevant, detect_topic
 from db_utils import get_connection, create_tables
+import requests
 
 def clear_articles():
     conn = get_connection()
@@ -31,7 +32,11 @@ def fetch_and_cache():
     for feed_info in FEEDS:
         try:
             print(f"Fetching feed: {feed_info['source']}")
-            parsed = feedparser.parse(feed_info["url"], request_headers=headers)
+            # Fetch feed content with timeout
+            response = requests.get(feed_info["url"], headers=headers, timeout=10)
+            response.raise_for_status()  # Raise error for bad HTTP status
+            parsed = feedparser.parse(response.content)
+
             count = 0
             for entry in parsed.entries:
                 if is_relevant(entry.title):
@@ -45,6 +50,7 @@ def fetch_and_cache():
                     }
                     insert_article(article)
                     count += 1
+
             print(f"✓ Done: {feed_info['source']}, articles: {count}")
             total_articles += count
             time.sleep(1)

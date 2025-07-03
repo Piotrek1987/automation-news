@@ -4,26 +4,26 @@ on:
   schedule:
     # Runs at 7:00 AM UTC every day
     - cron: '0 7 * * *'
-    workflow_dispatch: 
+  workflow_dispatch:  # <--- aligned with schedule
 
 jobs:
   refresh-news:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v3
+      - name: Checkout repo
+        uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
 
-    - name: Install dependencies
-      run: pip install -r requirements.txt
+      - name: Install dependencies
+        run: pip install -r requirements.txt
 
-    - name: Run fetch_and_cache_news script
-      run: python fetch_and_cache_news.py
+      - name: Run fetch_and_cache_news script
+        run: python fetch_and_cache_news.py
 
       - name: Trigger app refresh
-        run: curl -X GET https://https://world-news-app-qhk9.onrender.com//refresh
+        run: curl -X GET https://world-news-app-qhk9.onrender.com/refresh

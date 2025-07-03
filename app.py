@@ -9,10 +9,8 @@ from db_utils import create_tables
 DB_PATH = "news.db"
 
 app = Flask(__name__)
-app.secret_key = "super_secret_key"
+create_tables()
 
-with app.app_context():
-    create_tables()
 
 def load_cached_news():
     conn = sqlite3.connect(DB_PATH)
@@ -48,6 +46,7 @@ def home():
         selected_region=region,
         selected_country=country,
         )
+
 @app.route("/refresh")
 def refresh():
     def fetch_news():
